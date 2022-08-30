@@ -15,9 +15,12 @@ else:
 arcpy.CreateFileGDB_management(settings.datapath,settings.gdbname)
 print("created new GDB")
 
-for i in range(len(settings.layers)):
-      print (settings.layers[i])
-      arcpy.FeatureClassToFeatureClass_conversion(settings.connectionpath+settings.layers[i],settings.gdbpath,settings.layersnickname[i])
+for layer in settings.layers2:
+      print (layer)
+      arcpy.FeatureClassToFeatureClass_conversion(\
+            settings.connectionpath+layer,\
+            settings.gdbpath,\
+            settings.layers2[layer])
       
 
 print(time.ctime())

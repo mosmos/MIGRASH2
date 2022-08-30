@@ -7,3 +7,10 @@ layers=["db720.dbo.KD_TG_CHELKOT_BAALUT",
 "db720.dbo.ta_tg_biuv_kav",
 "db720.dbo.kl_tg_tree_all"]
 layersnickname=["migrashim","raash","biuv","etzim"]
+
+layers2 = {"db720.dbo.KD_TG_CHELKOT_BAALUT","migrashim"}
+
+
+
+
+
