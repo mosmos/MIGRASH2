@@ -13,7 +13,10 @@ print(f"created new GDB:{gdb}")
 
 for layer in settings.layers2:
       print (f"copying layer:{layer}")
-      arcpy.FeatureClassToFeatureClass_conversion(settings.connectionpath+layer,settings.gdbpath,settings.layers2[layer])
+      try:
+            results = arcpy.FeatureClassToFeatureClass_conversion(settings.connectionpath+layer,settings.gdbpath,settings.layers2[layer])
+      except :
+            print (results)      
       print(time.ctime())
 
 
