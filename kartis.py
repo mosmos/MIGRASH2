@@ -22,12 +22,6 @@ for i in range(len(settings.layers)):
 
 print(time.ctime())
 
-print(time.ctime())
-print(time.ctime())
-#gf;lkdgjkfd;gjkdl;gjjjjjjjjjjjjlk;ajlk
-print("created new GDB")
-print("created new GDB")
-print("created new GDB")
-print("bla bla blafdrgfdsgtgertertesdf")
+
 
 
