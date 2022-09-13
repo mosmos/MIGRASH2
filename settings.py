@@ -2,7 +2,6 @@ gdbpath="C:\\TEMP\\GDATA\\LAYERSFORPROCESS.gdb"
 datapath="C:\\TEMP\\GDATA"
 gdbname="LAYERSFORPROCESS.gdb"
 connectionpath="C:\\TEMP\\connectionfile\\dgt-sde01db720.sde\\"
-<<<<<<< HEAD
 layers2 = {"db720.dbo.KD_TG_CHELKOT_BAALUT":"migrashim",
     "db720.dbo.es_tg_raash_45m":"raash_45m",
     "db720.dbo.ta_tg_biuv_kav":"biuv_kav",
@@ -26,7 +25,7 @@ layers2 = {"db720.dbo.KD_TG_CHELKOT_BAALUT":"migrashim",
     "db720.dbo.kl_tg_trees_achzaka":"trees_achzaka",
     "db720.dbo.kl_tg_ginot_klavim":"ginot_klavim",
     "db720.dbo.kl_tg_ginot_kehilatiyot":"kehilatiyot"}
-=======
+# =======
 layers2 = {"db720.dbo.KD_TG_CHELKOT_BAALUT":{"alias":"migrashim","sql":None},
     "db720.dbo.es_tg_raash_45m":{"alias":"raash_45m","sql":None},
     "db720.dbo.ta_tg_biuv_kav":{"alias":"biuv_kav","sql":None},
@@ -51,11 +50,6 @@ layers2 = {"db720.dbo.KD_TG_CHELKOT_BAALUT":{"alias":"migrashim","sql":None},
     "db720.dbo.kl_tg_ginot_klavim":{"alias":"ginot_klavim","sql":None},
     "db720.DBO.yk_tg_migrashim":{"alias":"yeudei_karka", "sql":"k_yeud_rashi=1005"},
     "db720.dbo.kl_tg_ginot_kehilatiyot":{"alias":"ginot_kehilatiyot","sql":None}}
-
-
-
-
->>>>>>> ddf90809f5ca8854cb4faae3a2660ac1cc7fac46
 
 
 
