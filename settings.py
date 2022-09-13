@@ -1,7 +1,7 @@
-gdbpath="C:/TEMP/GDATA/LAYERSFORPROCESS.gdb"
-datapath="C:/TEMP/GDATA"
+gdbpath="C:\\TEMP\\GDATA\\LAYERSFORPROCESS.gdb"
+datapath="C:\\TEMP\\GDATA"
 gdbname="LAYERSFORPROCESS.gdb"
-connectionpath="C:/TEMP/connectionfile/dgt-sde01db720.sde/"
+connectionpath="C:\\TEMP\\connectionfile\\dgt-sde01db720.sde\\"
 layers2 = {"db720.dbo.KD_TG_CHELKOT_BAALUT":"migrashim",
     "db720.dbo.es_tg_raash_45m":"raash_45m",
     "db720.dbo.ta_tg_biuv_kav":"biuv_kav",

@@ -2,6 +2,8 @@ import time
 import settings
 import arcpy
 
+print(time.ctime())
+
 if arcpy.Exists(settings.gdbpath):
       arcpy.Delete_management(settings.gdbpath)
       print("deleted old GDB")
