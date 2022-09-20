@@ -10,9 +10,17 @@ EXL = pd.read_excel(EXL)
 #print (EXL.columns)
 print ("*****************************************************")
 
-print (EXL[['PATH','BUFFER','ATTRIBUTES']])
+# filter only specific columns
+EXL =  EXL[['PATH','ATTRIBUTES','SQL']]
 
-print ("*****************************************************")
-for i in EXL['PATH']:
-    print (EXL[EXL['PATH']==i])
+EXL_dict = EXL.to_dict(orient='records')
+
+print (EXL_dict)
+
+for i in EXL_dict:
+    print (i["PATH"])
+    print ("---")
+
+
+
 
