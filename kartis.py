@@ -1,7 +1,10 @@
 import time
 import settings
 import arcpy
+import pandas
 
+print(time.ctime())
+   
 # בודק אם קיים דאטה בייס ישן אם יש מוחק
 if arcpy.Exists(settings.gdbpath):
       arcpy.Delete_management(settings.gdbpath)
@@ -13,15 +16,31 @@ else:
 gdb = arcpy.CreateFileGDB_management(settings.datapath,settings.gdbname)
 print(f"created new GDB:{gdb}")
 
-# מכניס לתוך הדאטה בייס את כל השכבות שמעניינות אותנו כולל סינון ראשוני במידת הצורך
-for layer in settings.layers2:
-      print (f"copying layer:{layer}")
-      try:
-            results = arcpy.FeatureClassToFeatureClass_conversion(settings.connectionpath+layer,settings.gdbpath,settings.layers2[layer]["alias"],settings.layers2[layer]["sql"])
-      except :
-            print (results)      
-      print(time.ctime())
-                 
+#מייצר מתוך האקסל רשימה של שכבות עם המאפיינים הנוספים של כל שכבה
+layerslist_excel = pandas.read_excel(settings.excelpath, sheet_name='layers')
+layerslist_dict = layerslist_excel.to_dict(orient='records')
+
+# משנה את הערך הריק (נון) של האקסל בערך הריק (נון) של פיטון הכרחי כי אחרת הוא לא נקרא בפונקציה של העתקת השכבות של הארק פיי
+for layer in layerslist_dict:
+
+      if (layerslist_dict[settings.counterone]["SQL"] == "None") is True:
+            layerslist_dict[settings.counterone]["SQL"]=None
+            settings.counterone+=1
+      else:
+            print("no need to change value")
+            settings.counterone+=1
+
+         
+# מכניס בלופ לתוך הדאטה בייס החדש שייצרנו את כל השכבות שהוזנו באקסל 
+for layer in layerslist_dict:
+      
+      print (f"now copying {layer}")
+      arcpy.FeatureClassToFeatureClass_conversion(settings.connectionpath+layerslist_dict[settings.countertwo]["PATH"],settings.gdbpath,layerslist_dict[settings.countertwo]["ALIAS"],layerslist_dict[settings.countertwo]["SQL"])
+      settings.countertwo+=1
+     
+
+print(time.ctime())
+
       
 
       
@@ -32,3 +51,15 @@ for layer in settings.layers2:
 
 
 
+
+
+
+
+
+# for layer in settings.layers2:
+#       print (f"copying layer:{layer}")
+#       try:
+#             results = arcpy.FeatureClassToFeatureClass_conversion(settings.connectionpath+layer,settings.gdbpath,settings.layers2[layer]["alias"],settings.layers2[layer]["sql"])
+#       except :
+#             print (results)      
+#       print(time.ctime())
