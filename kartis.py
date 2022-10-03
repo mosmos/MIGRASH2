@@ -1,9 +1,9 @@
 import time
-import settings
+print(time.ctime())
 import arcpy
 import pandas
+import settings
 
-print(time.ctime())
    
 # בודק אם קיים דאטה בייס ישן אם יש מוחק
 if arcpy.Exists(settings.gdbpath):
@@ -37,7 +37,23 @@ for layer in layerslist_dict:
       print (f"now copying {layer}")
       arcpy.FeatureClassToFeatureClass_conversion(settings.connectionpath+layerslist_dict[settings.countertwo]["PATH"],settings.gdbpath,layerslist_dict[settings.countertwo]["ALIAS"],layerslist_dict[settings.countertwo]["SQL"])
       settings.countertwo+=1
-     
+
+
+# מייצר באפר של 100 מטר לשכבת המגרשים
+print ("creating buffer for yeudei_karka")
+arcpy.Buffer_analysis(settings.gdbpath+"\yeudei_karka",settings.gdbpath+"\yeudei_karka_100m","100 meter")
+
+
+# חותך את כלל השכבות עלפי שכבת היעודי קרקע עם הבאפר
+
+for layer in layerslist_dict:
+      
+      print (f"cliping {layer}")
+      arcpy.Clip_analysis(settings.gdbpath+'\\'+layerslist_dict[settings.counterthree]["ALIAS"],settings.gdbpath+"\yeudei_karka_100m",settings.gdbpath+'\\'+layerslist_dict[settings.counterthree]["ALIAS"]+"_cliped")
+      settings.counterthree+=1
+
+
+
 
 print(time.ctime())
 
