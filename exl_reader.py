@@ -26,6 +26,8 @@ BUFFER_dict = {ALIAS_List[i]: BUFFER_List[i] for i in range(len(ALIAS_List))}
 CATEGOR_dict = {ALIAS_List[i]: CATEGOR_List[i] for i in range(len(ALIAS_List))}
 HEB_NAME_dict = {ALIAS_List[i]: HEB_NAME_List[i] for i in range(len(ALIAS_List))}
 
+# MY: build it like a JSON object
+# { layer_name(KEY) : {SQL:"",ATT:"",BUFFER:"",....}
 
 #A few prints for testing
 print(PATH_dict)
