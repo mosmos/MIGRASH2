@@ -3,6 +3,8 @@ print(time.ctime())
 import arcpy
 import pandas
 import settings
+import exl_reader
+
 
    
 # בודק אם קיים דאטה בייס ישן אם יש מוחק
