@@ -22,7 +22,7 @@ print("Step 1 completed successfully! :) ")
 
 #=======================================================================================================================================
 print("========== Step 2 ==========")
-#Copies all layers from SDE to GDB and make the join layer for the next steps. 
+#Copies all layers from SDE to GDB
 ##Create join layer for step 4
 
 for layer in exl_reader.JsonOutput:
@@ -110,8 +110,9 @@ for layer in exl_reader.JsonOutput:
             arcpy.CalculateField_management(Layer_Join_Path ,'buffer',"buffer(!Distance!)","PYTHON3",codeblockBuffer,"TEXT", "NO_ENFORCE_DOMAINS") 
             Fieldnames = arcpy.ListFields(Layer_Join_Path) 
             stayfields = settings.Convert(items["ATTRIBUTES"])
+            undeletedfields = ["Shape","OBJECTID","Shape_Length","Shape_Area","within","buffer"]
             for i in Fieldnames:
-                  if i.baseName not in stayfields and i.baseName != ("Shape","OBJECTID","Shape_Length","Shape_Area"):
+                  if i.baseName not in stayfields and i.baseName not in undeletedfields:
                         arcpy.DeleteField_management(Layer_Join_Path, i.baseName) #Deleting all unnecessary fields
                  
       
