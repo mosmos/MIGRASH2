@@ -1,11 +1,18 @@
 from datetime import datetime
 import os
 
-gdbpath="C:\DEV\GDATA\\{}_LAYERSFORPROCESS.gdb".format(datetime.now().strftime("%Y%m%d"))
+gdbpath="C:\DEV\GDATA"
 datapath="C:\\DEV\\GDATA"
-gdbname="{}_LAYERSFORPROCESS.gdb".format(datetime.now().strftime("%Y%m%d"))
 connectionpath="C:\DEV\connectionfile\\dgt-sde01db720.sde\\"
-excelpath="C:\DEV\connectionfile\MIGRASH_MILON.xlsx"
+excelpath="C:\DEV\MIGRASH2\MIGRASH_MILON.xlsx"
 username = os.getlogin()
+#exltemppath = 'C:\DEV\connectionfile\Report_Temp.xlsx'
+
+def Convert(string):
+    li = list(string.split(","))
+    return li
+
+#print(gdbpath)
+#print(gdbname)
 
 
