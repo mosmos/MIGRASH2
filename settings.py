@@ -7,9 +7,6 @@ connectionpath="C:\DEV\connectionfile\\dgt-sde01db720.sde\\"
 excelpath="C:\DEV\MIGRASH2\MIGRASH_MILON.xlsx"
 username = os.getlogin()
 
-#def Convert(string):
-#    li = list(string.split(","))
-#    return li
 
 
 

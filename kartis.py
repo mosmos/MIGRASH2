@@ -5,14 +5,13 @@ from datetime import datetime
 print(time.ctime())
 st = time.time()
 import arcpy
-import pandas
+import pandas as pd
 import settings
 import exl_reader
 import os
-from collections import Counter
 
 gdbpath="C:\DEV\GDATA"
-connectionpath="C:\DEV\connectionfile\\dgt-sde01db720.sde\\"
+connectionpath="C:\DEV\connectionfile\\sde01.sde\\"
 excelpath="C:\DEV\MIGRASH2\MIGRASH_MILON.xlsx"
 username = os.getlogin()
 
@@ -52,6 +51,9 @@ for layer in exl_reader.JsonOutput:
             outputIntersect = str(GDB) +'\\'+ layer + "Intersect"
             print ("Now making Intersect of layer {} with migrashim_humim layer".format(layer))
             arcpy.Intersect_analysis((outputLayer,migrashimpath),outputIntersect,"ALL", None, "INPUT")
+            arcpy.AlterField_management(outputIntersect,"FID_{}".format(layer),None,"מספר יחודי בשכבה")
+            arcpy.AlterField_management(outputIntersect,"FID_migrashim_humim",None,"חופף למגרש")
+            
       
 print("Step 2 completed successfully! :) ")
 
@@ -59,45 +61,62 @@ print("Step 2 completed successfully! :) ")
 print("========== Step 3 ==========")  
 
 IntersecList = [layer for layer in exl_reader.JsonOutput][1:]
+migrashType = [arcpy.Describe(str(GDB) +'\\'+ layer + "Intersect").shapeType for layer in IntersecList]
 migrashlist = []
-curser = arcpy.SearchCursor(migrashimpath)
+migrashArealist = []
+curser = arcpy.SearchCursor(migrashimpath) 
 for row in curser:
       migrashlist.append(row.getValue("OBJECTID"))
+      migrashArealist.append(row.getValue("Shape_Area"))
       del row
 del curser 
 
+with open("my_dataframe.html", "w",encoding="utf-8") as f:
+      f.write(f"{settings.TopHTMLwithfilter}\n")
+      for migrash in migrashlist[0:5]:
+            title = "מגרש {}".format(migrash) 
+            #link = '<a href="file:///C:/DEV/MIGRASH2/my_dataframe.html#{}"/a>'.format(migrash)  #הצג את {}</a>'.format(migrash,title)
+            #f.write("<h1>{}</h1>".format(title) +"\n")
+            f.write('<div id="מגרש-{}">'.format(migrash) + "\n")
+            f.write('<h1>{}</h1>'.format(title))
+            #f.write(link+"\n")
+            print ("Now making report to migrash {} ".format(migrash))
+            for layer in IntersecList:
+                  items = exl_reader.JsonOutput.get(layer)
+                  subtitle =  "שכבת {}:".format(items["HEB_NAME"])
+                  Origfields = Convert(items["ATTRIBUTES"])
+                  stayfields = ["FID_migrashim_humim","FID_{}".format(layer),"Shape_Length","Shape_Area"]
+                  outputIntersect = str(GDB) +'\\'+ layer + "Intersect"
+                  Fieldnames = [i.baseName for i in arcpy.ListFields(outputIntersect)]
+                  Aliasnames = [i.aliasName for i in arcpy.ListFields(outputIntersect)]
+                  removefields = [Aliasnames[Fieldnames.index(i)] for i in Fieldnames if i not in Origfields and i not in stayfields]
+                  df = pd.DataFrame.from_records(data=arcpy.da.SearchCursor(outputIntersect,Fieldnames), columns=Aliasnames)
+                  df.drop(columns = removefields,inplace= True)
+                  #df = df.replace("NaN", "", regex=True)
+                  rslt_df = df[df['חופף למגרש'] == migrash]
+                  if len(rslt_df) > 0:
+                        if items["TYPE"] == "Table" :
+                              html_table =  rslt_df.to_html(index=False) 
+                              # Add the title to the HTML table
+                              html_with_subtitle = f'<h3  style="color:Green;">{subtitle} קיימת חפיפה של {len(rslt_df)} רשומות<h3>\n<h4>{html_table}<h4>'
+                              f.write(html_with_subtitle + "\n")
+                        elif items["TYPE"] == "YesNo" :
+                              if migrashType[IntersecList.index(layer)] == "Polygon" :
+                                    analyst = "אחוז השטח החופף - {}%".format(round(rslt_df.drop_duplicates(subset='Shape_Area')['Shape_Area'].sum()/migrashArealist[migrashlist.index(migrash)] *100,2))
+                                    f.write(f'<h3  style="color:Green;">{subtitle} קיימת חפיפה של {len(rslt_df)} רשומות. {analyst}<h3>\n')
+                              if migrashType[IntersecList.index(layer)] == "Polyline" :  
+                                    analyst = f"אורך הקויים בתחום המגרש:{round(rslt_df.drop_duplicates(subset='Shape_Length')['Shape_Length'].sum(),2)} מטר"   
+                                    f.write(f'<h3  style="color:Green;">{subtitle} קיימת חפיפה של {len(rslt_df)} רשומות. {analyst}<h3>\n')
+                              if migrashType[IntersecList.index(layer)] == "Point" :  
+                                    f.write(f'<h3  style="color:Green;">{subtitle} קיימת חפיפה של {len(rslt_df)} רשומות.<h3>\n')                      
+                  else:
+                       f.write('<h3  style="color:Red;">{} - לא קיימת חפיפה</h3>'.format(subtitle) + "\n") 
+            f.write("<h1>-------------------------------<h1>" +"\n")
+            f.write('</div>' + "\n")   
+      f.write("<body>" + "\n")
+      f.write("<html>" + "\n") 
+                  
 
-result = result = {m: set(IntersecList) for m in migrashlist}
-
-
-result = {}
-for migrash in migrashlist:
-      print ("Now making report to migrash {} ".format(migrash))
-      resultlayer = {}
-      for layer in IntersecList:
-            items = exl_reader.JsonOutput.get(layer)
-            Origfields = Convert(items["ATTRIBUTES"])
-            outputIntersect = str(GDB) +'\\'+ layer + "Intersect"
-            Fieldnames = [i.baseName for i in arcpy.ListFields(outputIntersect)]
-            curser = arcpy.SearchCursor(outputIntersect) 
-            records = []     
-            for row in curser:
-                  FID_migrashim_humim = row.getValue("FID_migrashim_humim")
-                  if FID_migrashim_humim == migrash:
-                        record = []
-                        for field in Fieldnames:
-                              if field in Origfields or field == "FID_migrashim_humim":
-                                    record.append({field:row.getValue(field)})
-                        records.append(record)      
-                        resultlayer.update({layer:records})
-      result.update({migrash:resultlayer})
-      
-                              
-f = open("report.txt", "a")
-f.write(str(result))
-f.close()
- 
-                              
 print("Step 3 completed successfully!")
 #=======================================================================================================================================
 print("========== Step 4 ==========")
@@ -110,5 +129,3 @@ print("Good work {}! ".format(settings.username))
 print("\N{smiling face with sunglasses}")
 print(time.ctime())
 print('Execution time:', final_res[0:final_res.find(".") + 3], 'minutes')
-    
-                                          
