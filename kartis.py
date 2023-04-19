@@ -8,6 +8,7 @@ import logging
 import sys
 import requests
 import html
+import send2trash
 
 # Define project location
 currentDirectory = os.getcwd()
@@ -47,6 +48,31 @@ gdbname="{}_LAYERSFORPROCESS.gdb".format(current_time)
 GDB = arcpy.CreateFileGDB_management(gdbpath,gdbname)
 
 logger.info("created new GDB:", GDB)
+
+#Deleting files created more than a week ago
+current_date = datetime.datetime.now()
+
+# Loop through all files in the folder
+for filename in os.listdir(gdbpath):
+
+    # Check if the file is a GDB file
+    if filename.endswith(".gdb"):
+
+        # Extract the creation date from the file name
+        creation_date_str = filename.split("_")[0]
+        creation_date = datetime.datetime.strptime(creation_date_str, "%Y%m%d%H%M")
+
+        # Calculate the number of days since the file was created
+        delta = current_date - creation_date
+        days_since_creation = delta.days
+
+        # If the file is more than 7 days old, delete it
+        if days_since_creation > 7:
+            file_path = os.path.join(gdbpath, filename)
+            #shutil.rmtree(file_path)
+            send2trash.send2trash(file_path)
+            logger.info(f"Deleted file: {filename}")
+
 logger.info("Step 1 completed successfully! :) ")
 #=======================================================================================================================================
 logger.info("========== Step 2 ==========")
